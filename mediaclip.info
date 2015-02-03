@@ -1,0 +1,21 @@
+; $Id: mediaclip.info v 6.x-8.1-dev 07/05/2013
+name = Mediaclip(6.x-8.1-dev)
+description = Enable Mediaclip Designer (NOTE: This module requires SOAP to be installed).
+core = 6.x
+php = 5.0
+version = "6.x-8.1-dev"
+project = "mediaclip"
+datestamp = "1335935217"
+
+;Version handles:
+;In 6.x-7.x-dev:
+;1: Downtime checking and handling the orders
+;2: Sharing 
+
+;In 6.x-8.x-dev:
+;1: Css button in emails sent for share project links
+;2: Using Simple XML for reading data sent from soft2print
+
+
+;In 6.x-8.1-dev: Upgraded to work for old and new Soft2Print APIs
+;23: Switch for Live and Test orders

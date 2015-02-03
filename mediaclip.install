@@ -1,0 +1,124 @@
+<?php
+// $Id: mediaclip, v 6.x-8.1-dev 07/05/2013
+/**
+ * Implementation of hook_schema().
+ */
+function mediaclip_schema() {
+	$schema = array();
+ 
+	$schema['mediaclip_templates'] = array(
+		'description' => t('List of products with templates.'),
+		'fields' => array(
+		  'id' => array(
+			'description' => t('Auto increment ID.'),
+			'type' => 'serial',
+			'unsigned' => TRUE,
+			'not null' => TRUE,
+		  ),
+		  'product_id' => array(
+			'description' => t('product_id from table uc_products.'),
+			'type' => 'int',
+			'unsigned' => TRUE,
+			'not null' => TRUE,
+			'default' => 0,
+		  ),
+		  'template_id' => array(
+			'description' => t('template guid from soft2print.'),
+			'type' => 'varchar',
+			'length' => 250,
+			'not null' => TRUE,
+			'default' => '',
+		  ),
+		  'template_name' => array(
+			'description' => t('template name from soft2print.'),
+			'type' => 'varchar',
+			'length' => 250,
+			'not null' => TRUE,
+			'default' => '',
+		  ),
+		  'template_image' => array(
+			'description' => t('template image thumbnail from soft2print.'),
+			'type' => 'varchar',
+			'length' => 250,
+			'not null' => TRUE,
+			'default' => '',
+		  ),
+		  'display_name' => array(
+			'description' => t('template name for display.'),
+			'type' => 'varchar',
+			'length' => 250,
+			'not null' => TRUE,
+			'default' => '',
+		  ),
+		  'occasion' => array(
+			'description' => t('occasion name.'),
+			'type' => 'varchar',
+			'length' => 250,
+			'not null' => TRUE,
+			'default' => '',
+		  ),
+		  'category' => array(
+			'description' => t('Category name.'),
+			'type' => 'varchar',
+			'length' => 250,
+			'not null' => TRUE,
+			'default' => '',
+		  ),
+		  'status' => array(
+			'description' => t('Enable/Disable'),
+			'type' => 'int',
+			'unsigned' => TRUE,
+			'not null' => TRUE,
+			'default' => 0,
+		  ),
+		),
+		'primary key' => array('id'),
+	  );
+	  
+	return $schema;
+}
+
+/**
+* Implementation of hook_install()
+*/
+function mediaclip_install() {
+    db_query("DELETE FROM {cache}");
+	drupal_install_schema('mediaclip');
+	
+    $file_path = file_directory_path();
+    $file_path = $file_path.'/mediaclip_templates';
+    file_create_path($file_path);
+    $ret = file_check_directory($file_path, 1);
+	
+    $file_path1 = file_directory_path().'/mediaclip_templates/themes';
+    file_create_path($file_path1);
+    $ret1 = file_check_directory($file_path1, 1);
+}
+
+/**
+* Implementation of hook_uninstall()
+*/
+function mediaclip_uninstall() {
+	variable_del('mc_wsdl');
+	variable_del('mc_organizationName');	
+	variable_del('mc_organizationCode');	
+
+	
+	drupal_uninstall_schema('mediaclip');
+	
+	$dir_path = file_directory_path() .'/mediaclip_templates/themes';
+	if (file_check_directory($dir_path)) {
+		foreach (glob($dir_path.'/*.*') as $file) {
+			@unlink($file);
+		}
+		@rmdir($dir_path);
+	}
+
+	$dir_path = file_directory_path() .'/mediaclip_templates';
+	if (file_check_directory($dir_path)) {
+		foreach (glob($dir_path.'/*.*') as $file) {
+			@unlink($file);
+		}
+		@rmdir($dir_path);
+	}
+}
